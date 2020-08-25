@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Form from "./Form";
 import HyperlinksTable from "../HyperlinksTable";
+import spinnerStyle from "./spinner.module.css";
 
 class HyperlinksParser extends Component {
   constructor(props) {
@@ -31,34 +32,38 @@ class HyperlinksParser extends Component {
         const linksTable = links.map((v) => {
           const value = v.replace(valueLink, "");
           const label = v.replace(labelLink, "");
-          const tr = (
-            <tr>
-              <td>
-                <a href={value}>{value}</a>
-              </td>
-              <td>{label}</td>
-            </tr>
-          );
+          const tr = {
+            value,
+            label,
+          };
           return tr;
         });
         this.setState({
           htmlText: linksTable,
+          isFetching: false,
         });
       });
   };
 
   handleSubmit = ({ values: { urlValue } }) => {
+    this.setState({
+      isFetching: true,
+    });
     this.fetchHtmlDocument(urlValue);
   };
 
   render() {
-    const { htmlText } = this.state;
+    const { htmlText, isFetching } = this.state;
     return (
       <article>
         <Form onSubmit={this.handleSubmit} />
         <section>
           <h1>HTML</h1>
-          <HyperlinksTable links={htmlText} />
+          {isFetching ? (
+            <div className={spinnerStyle.loader}>Loading...</div>
+          ) : (
+            htmlText !== "" && <HyperlinksTable links={htmlText} />
+          )}
         </section>
       </article>
     );

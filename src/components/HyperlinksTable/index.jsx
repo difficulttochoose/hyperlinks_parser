@@ -1,16 +1,27 @@
 import React from "react";
+import styles from "./HyperlinkTable.module.scss";
 
 export default function HyperlinksTable(props) {
   const { links } = props;
+  const tr = links.map((l) => (
+    <tr className={styles.tableRow}>
+      <td className={styles.tableCell}>
+        <a className={styles.link} href={l.value}>
+          {l.value}
+        </a>
+      </td>
+      <td className={styles.tableCell}>{l.label}</td>
+    </tr>
+  ));
   return (
-    <table style={{ width: "500px" }}>
+    <table className={styles.table}>
       <thead>
-        <tr>
-          <th>Hyperlink value</th>
-          <th>Link label</th>
+        <tr className={styles.tableRow}>
+          <th className={styles.tableCell}>Hyperlink value</th>
+          <th className={styles.tableCell}>Link label</th>
         </tr>
       </thead>
-      <tbody>{links}</tbody>
+      <tbody>{tr}</tbody>
     </table>
   );
 }
